@@ -1,4 +1,4 @@
-import { TextInput, TextInputProps, ActionIcon, useMantineTheme, rem, List, ThemeIcon } from '@mantine/core';
+import { TextInput, TextInputProps, ActionIcon, useMantineTheme, rem, List } from '@mantine/core';
 import classes from './InputWithButton.module.css';
 import { useState } from 'react';
 import { IconPlus, IconCircleCheck } from '@tabler/icons-react';
@@ -14,6 +14,13 @@ export function InputWithButton(props: TextInputProps) {
   const handleAddItem = () => {
     setItems([...items, newItem]);
     setNewItem('');
+  };
+
+  const handleDeleteItem = (index: number) => {
+    setItems(
+      // Underscore first argument indicates it is not needed
+      items.filter((_, itemIndex) => itemIndex !== index)
+    );
   };
 
   const theme = useMantineTheme();
@@ -38,24 +45,16 @@ export function InputWithButton(props: TextInputProps) {
     {...props}
     />
     
-    <List
-      spacing="sm"
-      size="md"
-      center
-      icon={
-        <ThemeIcon color="teal" size={24} radius="xl">
-          <IconCircleCheck style={{ width: rem(16), height: rem(16) }} />
-        </ThemeIcon>
-      }
-    >
-      {items.map((item, index) => (
-        <>
-        <List.Item 
-          key={index}>{item}
-        </List.Item>
-        </>
-      ))}
-    </List>
+    <List spacing="sm" size="md" center>
+        {items.map((item, index) => (
+          <List.Item key={index}>
+            {item}
+            <ActionIcon onClick={() => handleDeleteItem(index)} color="teal" size={24} radius="xl">
+              <IconCircleCheck style={{ width: rem(16), height: rem(16) }} />
+            </ActionIcon>
+          </List.Item>
+        ))}
+      </List>
     </>
     
   );
