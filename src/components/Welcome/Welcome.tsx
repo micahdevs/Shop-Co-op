@@ -6,12 +6,12 @@ export function Welcome() {
     <>
       <Title className={classes.title} ta="center" mt={100}>
         Welcome to{' '}
-        <Text inherit variant="gradient" component="span" gradient={{ from: 'pink', to: 'yellow' }}>
+        <Text inherit variant="gradient" component="span" gradient={{ from: 'green', to: '' }}>
           Shop with Me
         </Text>
       </Title>
       <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-          To get started, add items to the list
+          Add items to the list
       </Text>
     </>
   );
