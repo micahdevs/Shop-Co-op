@@ -49,8 +49,16 @@ export function InputWithButton(props: TextInputProps) {
             key={index}
             >
             {item}
-            <ActionIcon onClick={() => handleDeleteItem(index)} color="white" size={24} radius="xl" ml={10}>
-              <IconTrash style={{ width: rem(16), height: rem(16), color: 'black' }} />
+            <ActionIcon
+              className={classes.trashcanButton}
+              onClick={() => handleDeleteItem(index)} 
+              color="white" 
+              size={24} 
+              radius="xl" 
+              ml={10}
+              variant="filled"
+              >
+              <IconTrash style={{ width: rem(16), height: rem(16), color: '#252525' }} />
             </ActionIcon>
           </List.Item>
         ))}

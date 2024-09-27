@@ -11,7 +11,7 @@ export function Welcome() {
         </Text>
       </Title>
       <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-          Add items to the list
+          Add items to the list, click to edit or delete
       </Text>
     </>
   );

@@ -12,3 +12,8 @@
       width: 50%;
     }
   }
+
+  .trashcanButton {
+    --ai-hover: "red" !important;
+  }
+  
