@@ -6,7 +6,7 @@ export function Welcome() {
     <>
       <Title className={classes.title} ta="center" mt={100}>
         Welcome to{' '}
-        <Text inherit variant="gradient" component="span" gradient={{ from: 'green', to: '' }}>
+        <Text className={classes.shop} inherit component="span">
           Shop with Me
         </Text>
       </Title>
