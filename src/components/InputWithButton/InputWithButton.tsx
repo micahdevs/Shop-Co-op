@@ -49,14 +49,10 @@ export function InputWithButton(props: TextInputProps) {
             key={index}
             >
             {item}
-            <ActionIcon
-              className={classes.trashcanButton}
+            <ActionIcon 
+              className={classes.listButton}
               onClick={() => handleDeleteItem(index)} 
-              color="white" 
-              size={24} 
-              radius="xl" 
-              ml={10}
-              variant="filled"
+              color='transparent'
               >
               <IconTrash style={{ width: rem(16), height: rem(16), color: '#252525' }} />
             </ActionIcon>

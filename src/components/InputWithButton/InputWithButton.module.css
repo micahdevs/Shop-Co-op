@@ -13,7 +13,8 @@
     }
   }
 
-  .trashcanButton {
-    --ai-hover: "red" !important;
+  /* should find better solution for this hover style */
+  .listButton {
+    --ai-hover: 'transparent' !important;
   }
   
