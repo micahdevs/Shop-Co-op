@@ -12,9 +12,4 @@
       width: 50%;
     }
   }
-
-  /* should find better solution for this hover style */
-  .listButton {
-    --ai-hover: 'transparent' !important;
-  }
   
