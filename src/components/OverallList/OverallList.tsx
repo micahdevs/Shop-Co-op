@@ -1,3 +1,4 @@
+import { Flex } from '@mantine/core';
 import { useState } from 'react';
 import { AddItem } from '../AddItem/AddItem';
 import { ItemList, ItemType } from '../ItemList/ItemList';
@@ -31,14 +32,18 @@ export function OverallList() {
 
     return (
         <>
-            <AddItem
-                onAddItem={handleAddItem} 
-            />
-            <ItemList
-                items={items}
-                onUpdate={handleUpdateItem}
-                onDelete={handleDeleteItem}
-            />
+            <Flex
+                direction='column'
+            >
+                <AddItem
+                    onAddItem={handleAddItem} 
+                />
+                <ItemList
+                    items={items}
+                    onUpdate={handleUpdateItem}
+                    onDelete={handleDeleteItem}
+                />
+            </Flex>
         </>
     );
 }

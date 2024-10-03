@@ -1,5 +1,4 @@
 import { TextInput, ActionIcon, rem } from '@mantine/core';
-import classes from './AddItem.module.css';
 import { useState } from 'react';
 import { IconPlus } from '@tabler/icons-react';
 import { ItemType } from '../ItemList/ItemList';
@@ -16,7 +15,6 @@ export function AddItem({ onAddItem }: AddItemProps): JSX.Element {
     <TextInput
       value={title}
       onChange={e => setTitle(e.target.value)}
-      className={classes.input}
       mt={25}
       m="md"
       radius="xl"

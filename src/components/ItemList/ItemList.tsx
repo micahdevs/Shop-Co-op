@@ -57,7 +57,10 @@ function Item({ item, onUpdate, onDelete }: ItemProps): JSX.Element {
         itemContent = (
             <>
                 {item.title}
-                <button type='button' onClick={() => setIsEditing(true)}>
+                <button 
+                    type='button' 
+                    onClick={() => setIsEditing(true)}
+                >
                     Edit
                 </button>
             </>
