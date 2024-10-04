@@ -23,7 +23,15 @@
     "@mikro-orm/core": "^6.3.12",
     "@mikro-orm/migrations": "^6.3.12",
     "@mikro-orm/postgresql": "^6.3.12",
+    "dotenv": "^16.4.5",
+    "path": "^0.12.7",
     "pg": "^8.13.0",
     "ts-node": "^10.9.2"
+  },
+  "mikro-orm": {
+    "configPaths": [
+      "./src/mikro-orm.config.ts",
+      "./dist/mikro-orm.config.js"
+    ]
   }
 }
