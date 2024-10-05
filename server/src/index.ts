@@ -7,9 +7,16 @@ const main = async () => {
     const orm = await MikroORM.init(mikroConfig);
     await orm.getMigrator().up();
 
-    const list = orm.em.create(List, {title: 'Shopping List'} as List);
-    await orm.em.persistAndFlush(list);
+    const emFork = orm.em.fork(); 
+    // fork the entity manager to avoid directly using global EntityManager (em) instance
+    // additional option to use the RequestContext helper:
+    // (https://mikro-orm.io/docs/identity-map#why-is-request-context-needed)
 
+    const list = emFork.create(List, {title: 'Shopping List'} as List);
+    await emFork.persistAndFlush(list);
+
+    const lists = await emFork.find(List, {});
+    console.log(lists);
 };
 
 main().catch((err) => {
