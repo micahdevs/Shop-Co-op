@@ -1,0 +1,19 @@
+version: "3.4"
+
+services:
+  keydb:
+    image: eqalpha/keydb:latest
+    ports:
+      - "6379:6379"
+
+  shopcoop:
+    image: shopcoop
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 4000:4000
+    depends_on:
+      - keydb
