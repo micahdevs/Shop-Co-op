@@ -8,20 +8,14 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
 import cors from "cors";
-// import { buildSchema } from "type-graphql";
-// import { HelloResolver } from "./resolvers/hello";
-// import { ListResolver } from "./resolvers/list";
-// import { UserResolver } from "./resolvers/user";
+import { buildSchema } from "type-graphql";
+import { HelloResolver } from "./resolvers/hello";
+import { ListResolver } from "./resolvers/list";
+import { UserResolver } from "./resolvers/user";
 // import RedisStore from "connect-redis";
 // import session from "express-session";
 // import { Redis } from "ioredis";
-// import { MyContext } from "./types";
-import { resolvers } from "./example-schema/resolvers";
-import { typeDefs } from "./example-schema/typeDefs";
-
-interface ExampleContext {
-	token?: String;
-}
+import { MyContext } from "./types";
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroConfig);
@@ -29,7 +23,7 @@ const main = async () => {
 	// fork the entity manager to avoid directly using global EntityManager (em) instance
 	// additional option to use the RequestContext helper:
 	// (https://mikro-orm.io/docs/identity-map#why-is-request-context-needed)
-	// const emFork = orm.em.fork();
+	const emFork = orm.em.fork();
 
 	const app = express();
 	const httpServer = http.createServer(app);
@@ -56,10 +50,13 @@ const main = async () => {
 	// 	}) as express.RequestHandler
 	// );
 
-	const apolloServer = new ApolloServer<ExampleContext>({
-		resolvers: [resolvers],
+	const schema = await buildSchema({
+		resolvers: [HelloResolver, ListResolver, UserResolver],
+	});
+
+	const apolloServer = new ApolloServer<MyContext>({
+		schema,
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-		typeDefs,
 	});
 
 	await apolloServer.start();
@@ -68,7 +65,7 @@ const main = async () => {
 		cors<cors.CorsRequest>(),
 		express.json(),
 		expressMiddleware(apolloServer, {
-			context: async ({ req }) => ({ token: req.headers.token }),
+			context: async () => ({ em: emFork }),
 		})
 	);
 
