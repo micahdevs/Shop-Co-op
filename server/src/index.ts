@@ -3,14 +3,25 @@ import { MikroORM } from "@mikro-orm/core";
 import { __prod__ } from "./constants";
 import mikroConfig from "./mikro-orm.config";
 import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
-import { Application } from "../node_modules/apollo-server-express/node_modules/@types/express/index";
-import { ListResolver } from "./resolvers/list";
-import { UserResolver } from "./resolvers/user";
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import http from "http";
+import cors from "cors";
+// import { buildSchema } from "type-graphql";
+// import { HelloResolver } from "./resolvers/hello";
+// import { ListResolver } from "./resolvers/list";
+// import { UserResolver } from "./resolvers/user";
+// import RedisStore from "connect-redis";
 // import session from "express-session";
-import redis from "redis";
+// import { Redis } from "ioredis";
+// import { MyContext } from "./types";
+import { resolvers } from "./example-schema/resolvers";
+import { typeDefs } from "./example-schema/typeDefs";
+
+interface ExampleContext {
+	token?: String;
+}
 
 const main = async () => {
 	const orm = await MikroORM.init(mikroConfig);
@@ -18,35 +29,48 @@ const main = async () => {
 	// fork the entity manager to avoid directly using global EntityManager (em) instance
 	// additional option to use the RequestContext helper:
 	// (https://mikro-orm.io/docs/identity-map#why-is-request-context-needed)
-	const emFork = orm.em.fork();
+	// const emFork = orm.em.fork();
 
-	const app = express() as Application;
+	const app = express();
+	const httpServer = http.createServer(app);
 
-	const client = redis.createClient({
-		url: "redis://keydb:6379",
-	});
+	// Initialize client.
+	// let redisClient = new Redis();
+	// redisClient.connect().catch(console.error);
 
-	await client.connect();
-	await client.set("message", "Hello from Node.js and KeyDB!");
-	const value = await client.get("message");
-	console.log(value);
+	// Initialize store.
+	// const redisStore = new RedisStore({
+	// 	client: redisClient,
+	// });
 
-	client.on("error", (err) => console.log("Redis Client Error", err));
+	// Initialize session storage.
+	// app.use(
+	// 	session({
+	// 		store: redisStore,
+	// 		resave: false, // required: force lightweight session keep alive (touch)
+	// 		secret: "keyboard cat",
+	// 		cookie: {
+	// 			maxAge: 1000 * 60 * 60 * 24,
+	// 			httpOnly: true,
+	// 		},
+	// 	}) as express.RequestHandler
+	// );
 
-	const apolloServer = new ApolloServer({
-		schema: await buildSchema({
-			resolvers: [HelloResolver, ListResolver, UserResolver],
-			validate: false,
-		}),
-		context: () => ({ em: emFork }),
+	const apolloServer = new ApolloServer<ExampleContext>({
+		resolvers: [resolvers],
+		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+		typeDefs,
 	});
 
 	await apolloServer.start();
-	apolloServer.applyMiddleware({ app });
-
-	app.get("/", (_, res) => {
-		res.send("Go to Graphql sandbox: localhost:4000/graphql");
-	});
+	app.use(
+		"/graphql",
+		cors<cors.CorsRequest>(),
+		express.json(),
+		expressMiddleware(apolloServer, {
+			context: async ({ req }) => ({ token: req.headers.token }),
+		})
+	);
 
 	app.listen(4000, () => {
 		console.log("server started on localhost:4000");
