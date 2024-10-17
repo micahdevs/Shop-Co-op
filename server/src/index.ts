@@ -12,9 +12,9 @@ import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { ListResolver } from "./resolvers/list";
 import { UserResolver } from "./resolvers/user";
-// import RedisStore from "connect-redis";
-// import session from "express-session";
-// import { Redis } from "ioredis";
+import RedisStore from "connect-redis";
+import session from "express-session";
+import { createClient } from "redis";
 import { MyContext } from "./types";
 
 const main = async () => {
@@ -28,27 +28,34 @@ const main = async () => {
 	const app = express();
 	const httpServer = http.createServer(app);
 
-	// Initialize client.
-	// let redisClient = new Redis();
-	// redisClient.connect().catch(console.error);
+	// *Session storage code between express app initialization and expressMiddleware function*
+	// Initialize client
+	const redisClient = createClient();
+	redisClient.connect().catch(console.error);
 
-	// Initialize store.
-	// const redisStore = new RedisStore({
-	// 	client: redisClient,
-	// });
+	// Initialize store
+	const redisStore = new RedisStore({
+		client: redisClient,
+		prefix: "shopcoop",
+		disableTouch: true,
+	});
 
-	// Initialize session storage.
-	// app.use(
-	// 	session({
-	// 		store: redisStore,
-	// 		resave: false, // required: force lightweight session keep alive (touch)
-	// 		secret: "keyboard cat",
-	// 		cookie: {
-	// 			maxAge: 1000 * 60 * 60 * 24,
-	// 			httpOnly: true,
-	// 		},
-	// 	}) as express.RequestHandler
-	// );
+	// Initialize session storage
+	app.use(
+		session({
+			name: "qid",
+			store: redisStore,
+			resave: false, // required: force lightweight session keep alive (touch)
+			saveUninitialized: false, // recommended: only save session when data exists
+			secret: "klsdfjalshdfhasdglh",
+			cookie: {
+				maxAge: 1000 * 60 * 60 * 24 * 365 * 5, // 5 years
+				httpOnly: true,
+				sameSite: "lax", // csrf
+				secure: __prod__, // cookie only works in https in __prod__
+			},
+		})
+	);
 
 	const schema = await buildSchema({
 		resolvers: [HelloResolver, ListResolver, UserResolver],
@@ -65,7 +72,7 @@ const main = async () => {
 		cors<cors.CorsRequest>(),
 		express.json(),
 		expressMiddleware(apolloServer, {
-			context: async () => ({ em: emFork }),
+			context: async ({ req, res }): Promise<MyContext> => ({ em: emFork, req, res }),
 		})
 	);
 
