@@ -38,11 +38,11 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
-	@Mutation(() => User)
+	@Mutation(() => UserResponse)
 	async register(
-		@Arg("options") options: UsernamePasswordInput,
+		@Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
 		@Ctx() { em }: MyContext
-	) {
+	): Promise<UserResponse> {
 		if (options.username.length <= 5) {
 			return {
 				errors: [
@@ -118,8 +118,6 @@ export class UserResolver {
 				],
 			};
 		}
-		return {
-			user,
-		};
+		return { user };
 	}
 }
