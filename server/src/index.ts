@@ -72,7 +72,11 @@ const main = async () => {
 		cors<cors.CorsRequest>(),
 		express.json(),
 		expressMiddleware(apolloServer, {
-			context: async ({ req, res }): Promise<MyContext> => ({ em: emFork, req, res }),
+			context: async ({ req, res }): Promise<MyContext> => ({
+				em: emFork,
+				req,
+				res,
+			}),
 		})
 	);
 
