@@ -13,6 +13,20 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import classes from "./authenticationForm.module.css";
+import { useMutation } from "urql";
+
+const REGISTER_MUTATION = `mutation Register($username: String!, $password: String!) {
+    register(options: {username: $username, password: $password }) {
+      errors {
+        field
+        message
+      }
+      user {
+        _id
+        username
+      }
+    }
+  }`;
 
 export function AuthenticationForm() {
 	const form = useForm({
@@ -30,6 +44,8 @@ export function AuthenticationForm() {
 		},
 	});
 
+    const [, register] = useMutation(REGISTER_MUTATION);
+
 	return (
 		<Container size={420} my={40}>
 			<Title ta="center" className={classes.title}>
@@ -41,7 +57,24 @@ export function AuthenticationForm() {
 					Create account
 				</Anchor>
 			</Text>
-			<form onSubmit={form.onSubmit((values) => console.log(values))}>
+			<form
+				onSubmit={form.onSubmit(
+					(values, event) => {
+						console.log(
+							values, // <- form.getValues() at the moment of submit
+							event // <- form element submit event
+						);
+                        return register(values);
+					},
+					(validationErrors, values, event) => {
+						console.log(
+							validationErrors, // <- form.errors at the moment of submit
+							values,
+							event
+						);
+					}
+				)}
+			>
 				<Paper withBorder shadow="md" p={30} mt={30} radius="md">
 					<TextInput
 						label="Username or Email"
@@ -64,8 +97,13 @@ export function AuthenticationForm() {
 							Forgot password?
 						</Anchor>
 					</Group>
-					<Button type="submit" fullWidth mt="xl">
-						Sign in
+					<Button 
+                    type="submit" 
+                    fullWidth 
+                    mt="xl"
+                    
+                    >
+						Register
 					</Button>
 				</Paper>
 			</form>

@@ -1,5 +1,11 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Shop Co-op",
+	description: "NextJS + Mantine app",
+};
 
 export default function Home() {
 	return (
