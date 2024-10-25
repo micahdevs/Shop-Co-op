@@ -8,22 +8,10 @@ import {
 	createClient,
 } from "@urql/next";
 // import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import "@mantine/core/styles.css";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-
-const geistSans = localFont({
-	src: "./fonts/GeistVF.woff",
-	variable: "--font-geist-sans",
-	weight: "100 900",
-});
-const geistMono = localFont({
-	src: "./fonts/GeistMonoVF.woff",
-	variable: "--font-geist-mono",
-	weight: "100 900",
-});
 
 // MOVED METADATA EXPORT TO app/page.tsx
 // export const metadata: Metadata = {

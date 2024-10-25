@@ -14,22 +14,11 @@ import {
 import { useForm } from "@mantine/form";
 import classes from "./authenticationForm.module.css";
 import { useMutation } from "urql";
+import { REGISTER_MUT } from "@/graphql/mutations/register";
+import { RegisterMutation, UsernamePasswordInput } from "@/generated/graphql";
 
-const REGISTER_MUTATION = `mutation Register($username: String!, $password: String!) {
-    register(options: {username: $username, password: $password }) {
-      errors {
-        field
-        message
-      }
-      user {
-        _id
-        username
-      }
-    }
-  }`;
-
-export function AuthenticationForm() {
-	const form = useForm({
+export const AuthenticationForm: React.FC = () => {
+	const form = useForm<UsernamePasswordInput>({
 		mode: "uncontrolled",
 		initialValues: {
 			username: "",
@@ -44,7 +33,16 @@ export function AuthenticationForm() {
 		},
 	});
 
-    const [, register] = useMutation(REGISTER_MUTATION);
+	const [, register] = useMutation<RegisterMutation>(REGISTER_MUT);
+
+	const handleSubmit = async (values: UsernamePasswordInput) => {
+		try {
+			await register({ username: values.username, password: values.password });
+			console.log("successfully registered!");
+		} catch (error) {
+			console.log(console.error(error));
+		}
+	};
 
 	return (
 		<Container size={420} my={40}>
@@ -58,22 +56,7 @@ export function AuthenticationForm() {
 				</Anchor>
 			</Text>
 			<form
-				onSubmit={form.onSubmit(
-					(values, event) => {
-						console.log(
-							values, // <- form.getValues() at the moment of submit
-							event // <- form element submit event
-						);
-                        return register(values);
-					},
-					(validationErrors, values, event) => {
-						console.log(
-							validationErrors, // <- form.errors at the moment of submit
-							values,
-							event
-						);
-					}
-				)}
+				onSubmit={form.onSubmit(handleSubmit)}
 			>
 				<Paper withBorder shadow="md" p={30} mt={30} radius="md">
 					<TextInput
@@ -97,16 +80,11 @@ export function AuthenticationForm() {
 							Forgot password?
 						</Anchor>
 					</Group>
-					<Button 
-                    type="submit" 
-                    fullWidth 
-                    mt="xl"
-                    
-                    >
+					<Button type="submit" fullWidth mt="xl">
 						Register
 					</Button>
 				</Paper>
 			</form>
 		</Container>
 	);
-}
+};
