@@ -1,10 +1,5 @@
 "use client";
-import {
-	TextInput,
-	PasswordInput,
-	Paper,
-	Button,
-} from "@mantine/core";
+import { TextInput, PasswordInput, Paper, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "urql";
 import { REGISTER_MUT } from "@/graphql/mutations/register";
@@ -14,16 +9,17 @@ export const RegisterForm: React.FC = () => {
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
-            email: "",
+			email: "",
 			username: "",
 			password: "",
 		},
 
 		validate: {
+			email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
 			username: (value) =>
-				value.length < 6 ? "Username must be 6 characters or longer" : null,
+				value.length < 3 ? "Username must be 3 characters or longer" : null,
 			password: (value) =>
-				value.length < 6 ? "Password must be 6 characters or longer" : null,
+				value.length < 3 ? "Password must be 3 characters or longer" : null,
 		},
 	});
 
@@ -32,7 +28,7 @@ export const RegisterForm: React.FC = () => {
 	const handleSubmit = async (values: UsernamePasswordInput) => {
 		try {
 			await register({ username: values.username, password: values.password });
-			console.log("successfully registered!");
+			console.log("successfully registered!", values);
 		} catch (error) {
 			console.log(console.error(error));
 		}
@@ -44,9 +40,9 @@ export const RegisterForm: React.FC = () => {
 				<TextInput
 					label="Email"
 					placeholder="yourEmail@email.com"
-					required
-					key={form.key("username")}
-					{...form.getInputProps("username")}
+					// required
+					key={form.key("email")}
+					{...form.getInputProps("email")}
 				/>
 				<TextInput
 					label="Username"

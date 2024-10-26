@@ -54,23 +54,23 @@ export class UserResolver {
 		@Arg("options", () => UsernamePasswordInput) options: UsernamePasswordInput,
 		@Ctx() { em, req }: MyContext
 	): Promise<UserResponse> {
-		if (options.username.length <= 5) {
+		if (options.username.length <= 2) {
 			return {
 				errors: [
 					{
 						field: "username",
-						message: "username must be at least 6 characters",
+						message: "username must be at least 3 characters",
 					},
 				],
 			};
 		}
 
-		if (options.password.length <= 5) {
+		if (options.password.length <= 2) {
 			return {
 				errors: [
 					{
 						field: "password",
-						message: "password must be at least 6 characters",
+						message: "password must be at least 3 characters",
 					},
 				],
 			};

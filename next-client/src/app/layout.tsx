@@ -25,6 +25,9 @@ export default function RootLayout({
 			url: "http://localhost:4000/graphql",
 			exchanges: [cacheExchange, ssr, fetchExchange],
 			suspense: true,
+			fetchOptions: {
+				credentials: "include", // to get cors error
+			}
 		});
 
 		return [client, ssr];
