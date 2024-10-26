@@ -7,17 +7,10 @@ import {
 	fetchExchange,
 	createClient,
 } from "@urql/next";
-// import type { Metadata } from "next";
 import "./globals.css";
 import "@mantine/core/styles.css";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-
-// MOVED METADATA EXPORT TO app/page.tsx
-// export const metadata: Metadata = {
-// 	title: "Shop Co-op",
-// 	description: "NextJS + Mantine app",
-// };
 
 export default function RootLayout({
 	children,
