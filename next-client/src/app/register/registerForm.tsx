@@ -3,9 +3,30 @@ import { TextInput, PasswordInput, Paper, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useMutation } from "urql";
 import { REGISTER_MUT } from "@/graphql/mutations/register";
-import { RegisterMutation, UsernamePasswordInput } from "@/generated/graphql";
+import { Mutation, UsernamePasswordInput } from "@/generated/graphql";
+import { useRouter } from "next/navigation";
 
+// NEED: generic errors from graphql/server ie. username already exists rather than
+// just the errors present from the form validation
 export const RegisterForm: React.FC = () => {
+	const router = useRouter();
+
+	const [, register] = useMutation<Mutation>(REGISTER_MUT);
+
+	const handleSubmit = async (values: UsernamePasswordInput) => {
+		try {
+			const response = await register({
+				username: values.username,
+				password: values.password,
+			});
+
+			router.push("/");
+			console.log("successfully registered!", values);
+		} catch (error) {
+			console.log(console.error(error));
+		}
+	};
+
 	const form = useForm({
 		mode: "uncontrolled",
 		initialValues: {
@@ -22,17 +43,6 @@ export const RegisterForm: React.FC = () => {
 				value.length < 3 ? "Password must be 3 characters or longer" : null,
 		},
 	});
-
-	const [, register] = useMutation<RegisterMutation>(REGISTER_MUT);
-
-	const handleSubmit = async (values: UsernamePasswordInput) => {
-		try {
-			await register({ username: values.username, password: values.password });
-			console.log("successfully registered!", values);
-		} catch (error) {
-			console.log(console.error(error));
-		}
-	};
 
 	return (
 		<form onSubmit={form.onSubmit(handleSubmit)}>

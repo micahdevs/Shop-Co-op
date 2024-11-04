@@ -15,6 +15,7 @@
 		"@mantine/form": "^7.13.3",
 		"@mantine/hooks": "^7.13.3",
 		"@urql/next": "^1.1.2",
+		"formik": "^2.4.6",
 		"graphql": "^16.9.0",
 		"next": "14.2.15",
 		"react": "^18",
@@ -24,7 +25,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.13.0",
 		"@graphql-codegen/cli": "5.0.3",
-		"@graphql-codegen/client-preset": "4.4.0",
+		"@graphql-codegen/client-preset": "^4.5.0-alpha-20241025120637-8c227d2c67a14b063bb6a3f96d33069a98376541",
 		"@graphql-codegen/typescript-urql": "^4.0.0",
 		"@parcel/watcher": "^2.4.1",
 		"@types/eslint__js": "^8.42.3",

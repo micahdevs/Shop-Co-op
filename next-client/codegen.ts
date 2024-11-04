@@ -7,13 +7,15 @@ const config: CodegenConfig = {
 	generates: {
 		"./src/generated/": {
 			preset: "client",
+			presetConfig: {
+				gqlTagName: "gql",
+			},
 			config: {
 				withHooks: true,
 				documentMode: "string",
 			},
 		},
 	},
-	hooks: { afterAllFileWrite: ["prettier --write"] },
 };
 
 export default config;
