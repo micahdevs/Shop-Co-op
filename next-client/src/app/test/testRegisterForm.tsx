@@ -15,25 +15,14 @@ export const TestRegisterForm: React.FC<registerProps> = ({}) => {
 	const router = useRouter();
 	const [, register] = useMutation<Mutation>(REGISTER_MUT);
 
-	// const handleSubmit = async (values: UsernamePasswordInput) => {
-	// 	try {
-	// 		const response = await register({
-	// 			username: values.username,
-	// 			password: values.password,
-	// 		});
-
-	// 		router.push("/");
-	// 		console.log("successfully registered!", values);
-	// 	} catch (error) {
-	// 		console.log(console.error(error));
-	// 	}
-	// };
 	return (
 		<>
 			<Formik
 				initialValues={{ username: "", password: "" }}
 				onSubmit={async (values, { setErrors }) => {
 					const response = await register(values);
+					router.push("/");
+					console.log(values);
 					if (response.data?.register.errors) {
 						setErrors(toErrorMap(response.data.register.errors));
 					}

@@ -14,14 +14,7 @@ export const InputField: React.FC<InputFieldProps> = ({
 	const [field, { error }] = useField(props);
 	return (
 		<>
-			<TextInput
-				{...field}
-				{...props}
-				id={field.name}
-				mb="md"
-			/>
-			{/* need some style improvements, incorporate mantine rather than formik for error formatting here */}
-			{error ? <div>{error}</div> : null}
+			<TextInput {...field} {...props} id={field.name} mb="md" error={error} />
 		</>
 	);
 };
