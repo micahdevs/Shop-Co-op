@@ -8,66 +8,60 @@ import {
 	Group,
 	Button,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useMutation } from "urql";
-import { REGISTER_MUT } from "@/graphql/mutations/register";
-import { RegisterMutation, UsernamePasswordInput } from "@/generated/graphql";
+import { LOGIN_MUT } from "@/graphql/mutations/login";
+import { Mutation, UsernamePasswordInput } from "@/generated/graphql";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
+import { toErrorMap } from "../utils/toErrorMap";
+import { InputField } from "../components/InputField";
 
 export const LoginForm: React.FC = () => {
-	const form = useForm<UsernamePasswordInput>({
-		mode: "uncontrolled",
-		initialValues: {
-			username: "",
-			password: "",
-		},
-
-		validate: {
-			username: (value) =>
-				value.length < 6 ? "Username must be 6 characters or longer" : null,
-			password: (value) =>
-				value.length < 6 ? "Password must be 6 characters or longer" : null,
-		},
-	});
-
-	const [, register] = useMutation<RegisterMutation>(REGISTER_MUT);
-
-	const handleSubmit = async (values: UsernamePasswordInput) => {
-		try {
-			await register({ username: values.username, password: values.password });
-			console.log("successfully registered!");
-		} catch (error) {
-			console.log(console.error(error));
-		}
-	};
+	const router = useRouter();
+	const [, login] = useMutation<Mutation>(LOGIN_MUT);
 
 	return (
-		<form onSubmit={form.onSubmit(handleSubmit)}>
-			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
-				<TextInput
-					label="Username or Email"
-					placeholder="Your Username or Email"
-					required
-					key={form.key("username")}
-					{...form.getInputProps("username")}
-				/>
-				<PasswordInput
-					label="Password"
-					placeholder="Your password"
-					required
-					mt="md"
-					key={form.key("password")}
-					{...form.getInputProps("password")}
-				/>
-				<Group justify="space-between" mt="lg">
-					<Checkbox label="Remember me" />
-					<Anchor component="button" size="sm">
-						Forgot password?
-					</Anchor>
-				</Group>
-				<Button type="submit" fullWidth mt="xl">
-					Login
-				</Button>
-			</Paper>
-		</form>
+		<Formik
+			initialValues={{ username: "", password: "" }}
+			onSubmit={async (values, { setErrors }) => {
+				const response = await login({ options: values });
+				console.log(values);
+				if (response.data?.login.errors) {
+					setErrors(toErrorMap(response.data.login.errors));
+				} else if (response.data?.login.user) {
+					router.push("/");
+				}
+			}}
+		>
+			{({ isSubmitting }) => (
+				<Paper withBorder shadow="md" p={30} mt={30} radius="md">
+					<Form>
+						<InputField
+							name="username"
+							placeholder="Your Username or Email"
+							label="Username"
+							required
+						/>
+
+						<InputField
+							name="password"
+							placeholder="Your password"
+							label="Password"
+							type="password"
+							required
+						/>
+						<Group justify="space-between" mt="lg">
+							<Checkbox label="Remember me" />
+							<Anchor component="button" size="sm">
+								Forgot password?
+							</Anchor>
+						</Group>
+						<Button type="submit" loading={isSubmitting} fullWidth mt="xl">
+							Login
+						</Button>
+					</Form>
+				</Paper>
+			)}
+		</Formik>
 	);
 };

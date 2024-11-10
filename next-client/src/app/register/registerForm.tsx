@@ -1,6 +1,5 @@
 "use client";
 import { Paper, Button } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useMutation } from "urql";
 import { REGISTER_MUT } from "@/graphql/mutations/register";
 import { Mutation, UsernamePasswordInput } from "@/generated/graphql";
@@ -17,7 +16,7 @@ export const RegisterForm: React.FC = () => {
 		<Formik
 			initialValues={{ username: "", password: "" }}
 			onSubmit={async (values, { setErrors }) => {
-				const response = await register(values);
+				const response = await register({ options: values });
 				console.log(values);
 				if (response.data?.register.errors) {
 					setErrors(toErrorMap(response.data.register.errors));
@@ -40,7 +39,7 @@ export const RegisterForm: React.FC = () => {
 							label="Password"
 							type="password"
 						/>
-						<Button type="submit" loading={isSubmitting}>
+						<Button type="submit" loading={isSubmitting} fullWidth mt="xl">
 							Register
 						</Button>
 					</Form>

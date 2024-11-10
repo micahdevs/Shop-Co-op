@@ -1,8 +1,8 @@
 import { gql } from "urql";
 
 export const REGISTER_MUT = gql`
-	mutation Register($username: String!, $password: String!) {
-		register(options: { username: $username, password: $password }) {
+	mutation Register($options: UsernamePasswordInput!) {
+		register(options: $options) {
 			errors {
 				field
 				message
