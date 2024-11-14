@@ -1,16 +1,6 @@
 "use client";
-import {
-	TextInput,
-	PasswordInput,
-	Checkbox,
-	Anchor,
-	Paper,
-	Group,
-	Button,
-} from "@mantine/core";
-import { useMutation } from "urql";
-import { LOGIN_MUT } from "@/graphql/mutations/login";
-import { Mutation, UsernamePasswordInput } from "@/generated/graphql";
+import { Checkbox, Anchor, Paper, Group, Button } from "@mantine/core";
+import { useLoginMutation } from "@/generated/graphql";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { toErrorMap } from "../utils/toErrorMap";
@@ -18,7 +8,7 @@ import { InputField } from "../components/InputField";
 
 export const LoginForm: React.FC = () => {
 	const router = useRouter();
-	const [, login] = useMutation<Mutation>(LOGIN_MUT);
+	const [, login] = useLoginMutation();
 
 	return (
 		<Formik

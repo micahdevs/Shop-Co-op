@@ -11,28 +11,24 @@ import {
 } from "@tabler/icons-react";
 import classes from "./NavBar.module.css";
 import Link from "next/link";
-import { useQuery } from "urql";
-import { ME_QUERY } from "@/graphql/queries/me";
-import { Query } from "@/generated/graphql";
+import { useMeQuery } from "@/generated/graphql";
 
 interface NavBarProps {}
 
-const linkData = [
+const loggedInLinkData = [
 	{ link: "", label: "Account", icon: IconUserCircle },
 	{ link: "", label: "Settings", icon: IconSettings },
-	{ link: "", label: "Login", icon: IconLogin2 },
-	{ link: "", label: "Register", icon: IconUserCheck },
 ];
 
-// create a filtered links list for only the "login" and "register" icons as options if a user IS NOT LOGGED IN
-const filteredLinkData = linkData.filter(
-	(item) => item.label === "Login" || item.label === "Register"
-);
+const loggedOutLinkData = [
+	{ link: "http://localhost:3000/login", label: "Login", icon: IconLogin2 },
+	{ link: "http://localhost:3000/register", label: "Register", icon: IconUserCheck },
+];
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
 	const [active, setActive] = useState("Billing");
 
-	const links = linkData.map((item) => (
+	const loggedInLinks = loggedInLinkData.map((item) => (
 		<a
 			className={classes.link}
 			data-active={item.label === active || undefined}
@@ -48,7 +44,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 		</a>
 	));
 
-	const filteredLinks = filteredLinkData.map((item) => (
+	const loggedOutLinks = loggedOutLinkData.map((item) => (
 		<a
 			className={classes.link}
 			data-active={item.label === active || undefined}
@@ -64,7 +60,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 		</a>
 	));
 
-	const [result] = useQuery({ query: ME_QUERY });
+	const [result] = useMeQuery();
 	const { data, fetching } = result;
 	// errors with useQuery...
 	let body = null;
@@ -80,7 +76,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 						Shop Co-op Home
 						<Code fw={700}>v0.0.0</Code>
 					</Group>
-					{filteredLinks}
+					{loggedOutLinks}
 				</div>
 			</nav>
 		);
@@ -94,7 +90,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 						<Code fw={700}>v0.0.0</Code>
 					</Group>
 					<Paper>{data.me.username}</Paper>
-					{links}
+					{loggedInLinks}
 				</div>
 
 				<div className={classes.footer}>
