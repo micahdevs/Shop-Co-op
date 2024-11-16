@@ -97,6 +97,8 @@ export type UsernamePasswordInput = {
   username: Scalars['String']['input'];
 };
 
+export type RegUserFragment = { __typename?: 'User', _id: number, username: string };
+
 export type LoginMutationVariables = Exact<{
   options: UsernamePasswordInput;
 }>;
@@ -116,7 +118,12 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', _id: number, username: string } | null };
 
-
+export const RegUserFragmentDoc = `
+    fragment RegUser on User {
+  _id
+  username
+}
+    `;
 export const LoginDocument = `
     mutation Login($options: UsernamePasswordInput!) {
   login(options: $options) {
@@ -125,12 +132,11 @@ export const LoginDocument = `
       message
     }
     user {
-      _id
-      username
+      ...RegUser
     }
   }
 }
-    `;
+    ${RegUserFragmentDoc}`;
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
@@ -143,12 +149,11 @@ export const RegisterDocument = `
       message
     }
     user {
-      _id
-      username
+      ...RegUser
     }
   }
 }
-    `;
+    ${RegUserFragmentDoc}`;
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
@@ -156,11 +161,10 @@ export function useRegisterMutation() {
 export const MeDocument = `
     query Me {
   me {
-    _id
-    username
+    ...RegUser
   }
 }
-    `;
+    ${RegUserFragmentDoc}`;
 
 export function useMeQuery(options?: Omit<Urql.UseQueryArgs<MeQueryVariables>, 'query'>) {
   return Urql.useQuery<MeQuery, MeQueryVariables>({ query: MeDocument, ...options });

@@ -16,6 +16,8 @@
 		"@mantine/hooks": "^7.13.3",
 		"@mantinex/mantine-logo": "^1.0.1",
 		"@tabler/icons-react": "^3.21.0",
+		"@urql/core": "^5.0.8",
+		"@urql/exchange-graphcache": "^7.2.1",
 		"@urql/next": "^1.1.2",
 		"formik": "^2.4.6",
 		"graphql": "^16.9.0",

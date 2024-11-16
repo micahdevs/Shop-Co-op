@@ -1,4 +1,4 @@
-import { gql } from "urql";
+import { gql } from "@urql/core";
 
 export const LOGIN_MUT = gql`
 	mutation Login($options: UsernamePasswordInput!) {
@@ -8,8 +8,7 @@ export const LOGIN_MUT = gql`
 				message
 			}
 			user {
-				_id
-				username
+				...RegUser
 			}
 		}
 	}

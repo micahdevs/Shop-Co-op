@@ -60,9 +60,8 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 		</a>
 	));
 
-	const [result] = useMeQuery();
-	const { data, fetching } = result;
-	// errors with useQuery...
+	const [{data, fetching}] = useMeQuery();
+
 	let body = null;
 	if (fetching) {
 		// data is loading
