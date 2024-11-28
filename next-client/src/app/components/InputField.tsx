@@ -1,6 +1,6 @@
 import React, { InputHTMLAttributes } from "react";
 import { TextInput } from "@mantine/core";
-import { Formik, Field, Form, FormikHelpers, useField } from "formik";
+import { useField } from "formik";
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 	label: string;

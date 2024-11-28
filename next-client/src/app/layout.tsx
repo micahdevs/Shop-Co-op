@@ -13,11 +13,12 @@ import "@mantine/core/styles.css";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import {
 	LoginMutation,
+	LogoutMutation,
 	MeDocument,
 	MeQuery,
 	RegisterMutation,
 } from "@/generated/graphql";
-// import { LoginMutation, MeDocument, MeQuery } from "@/generated/graphql";
+import { devtoolsExchange } from '@urql/devtools';
 
 function betterUpdateQuery<Result, Query>(
 	cache: Cache,
@@ -40,9 +41,18 @@ export default function RootLayout({
 		const client = createClient({
 			url: "http://localhost:4000/graphql",
 			exchanges: [
+				devtoolsExchange,
 				cacheExchange({
 					updates: {
 						Mutation: {
+							logout: (_result, args, cache) => {
+								betterUpdateQuery<LogoutMutation, MeQuery>(
+									cache,
+									{ query: MeDocument },
+									_result,
+									() => ({ me: null })
+								);
+							},
 							login: (_result, args, cache) => {
 								betterUpdateQuery<LoginMutation, MeQuery>(
 									cache,

@@ -11,7 +11,7 @@ import {
 } from "@tabler/icons-react";
 import classes from "./NavBar.module.css";
 import Link from "next/link";
-import { useMeQuery } from "@/generated/graphql";
+import { useLogoutMutation, useMeQuery } from "@/generated/graphql";
 
 interface NavBarProps {}
 
@@ -22,10 +22,16 @@ const loggedInLinkData = [
 
 const loggedOutLinkData = [
 	{ link: "http://localhost:3000/login", label: "Login", icon: IconLogin2 },
-	{ link: "http://localhost:3000/register", label: "Register", icon: IconUserCheck },
+	{
+		link: "http://localhost:3000/register",
+		label: "Register",
+		icon: IconUserCheck,
+	},
 ];
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
+	const [, logout] = useLogoutMutation();
+	const [{ data, fetching }] = useMeQuery({});
 	const [active, setActive] = useState("Billing");
 
 	const loggedInLinks = loggedInLinkData.map((item) => (
@@ -59,8 +65,6 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 			<span>{item.label}</span>
 		</a>
 	));
-
-	const [{data, fetching}] = useMeQuery();
 
 	let body = null;
 	if (fetching) {
@@ -98,7 +102,13 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 						<span>Change account</span>
 					</Link>
 
-					<Link href="/login" className={classes.link}>
+					<Link
+						onClick={() => {
+							logout({}); // empty object passed as logout mutation doesn't take any variables
+						}}
+						href="/login"
+						className={classes.link}
+					>
 						<IconLogout className={classes.linkIcon} stroke={1.5} />
 						<span>Logout</span>
 					</Link>
