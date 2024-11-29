@@ -12,6 +12,7 @@ import {
 import classes from "./NavBar.module.css";
 import Link from "next/link";
 import { useLogoutMutation, useMeQuery } from "@/generated/graphql";
+import { isServer } from "@/app/utils/isServer";
 
 interface NavBarProps {}
 
@@ -31,8 +32,12 @@ const loggedOutLinkData = [
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
 	const [, logout] = useLogoutMutation();
-	const [{ data, fetching }] = useMeQuery({});
+	const [{ data, fetching }] = useMeQuery({
+		pause: isServer()
+	});
 	const [active, setActive] = useState("Billing");
+
+	console.log("data: ", data);
 
 	const loggedInLinks = loggedInLinkData.map((item) => (
 		<a

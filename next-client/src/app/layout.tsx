@@ -18,7 +18,7 @@ import {
 	MeQuery,
 	RegisterMutation,
 } from "@/generated/graphql";
-import { devtoolsExchange } from '@urql/devtools';
+import { devtoolsExchange } from "@urql/devtools";
 
 function betterUpdateQuery<Result, Query>(
 	cache: Cache,
