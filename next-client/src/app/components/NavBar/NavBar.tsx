@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Group, Code, Paper } from "@mantine/core";
 import {
 	IconUserCircle,
@@ -12,7 +12,6 @@ import {
 import classes from "./NavBar.module.css";
 import Link from "next/link";
 import { useLogoutMutation, useMeQuery } from "@/generated/graphql";
-import { isServer } from "@/app/utils/isServer";
 
 interface NavBarProps {}
 
@@ -32,22 +31,25 @@ const loggedOutLinkData = [
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
 	const [, logout] = useLogoutMutation();
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
 	const [{ data, fetching }] = useMeQuery({
-		pause: isServer()
+		pause: !isClient,
 	});
-	const [active, setActive] = useState("Billing");
 
 	console.log("data: ", data);
 
 	const loggedInLinks = loggedInLinkData.map((item) => (
 		<a
 			className={classes.link}
-			data-active={item.label === active || undefined}
 			href={item.link}
 			key={item.label}
 			onClick={(event) => {
 				event.preventDefault();
-				setActive(item.label);
 			}}
 		>
 			<item.icon className={classes.linkIcon} stroke={1.5} />
@@ -58,12 +60,10 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 	const loggedOutLinks = loggedOutLinkData.map((item) => (
 		<a
 			className={classes.link}
-			data-active={item.label === active || undefined}
 			href={item.link}
 			key={item.label}
 			onClick={(event) => {
 				event.preventDefault();
-				setActive(item.label);
 			}}
 		>
 			<item.icon className={classes.linkIcon} stroke={1.5} />

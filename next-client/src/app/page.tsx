@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { NavBar } from "../app/components/NavBar/NavBar";
-import { Lists } from "./components/Lists/Lists";
+import { Suspense } from "react";
+// import { Lists } from "./components/Lists/Lists";
+// import { TestNavBarRerender } from "./test/TestNavBarRerender";
 // import { TestHomeComponent } from "../app/test/TestHomeComponent";
 
 export const metadata: Metadata = {
@@ -11,8 +13,9 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<NavBar />
-			<Lists />
+			<Suspense>
+				<NavBar />
+			</Suspense>
 		</>
 	);
 }
