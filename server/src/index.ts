@@ -14,7 +14,7 @@ import { ListResolver } from "./resolvers/list";
 import { UserResolver } from "./resolvers/user";
 import RedisStore from "connect-redis";
 import session from "express-session";
-import { createClient } from "redis";
+import Redis from "ioredis";
 import { MyContext } from "./types";
 import { sendEmail } from "./utils/sendEmail";
 // import { User } from "./entities/User";
@@ -33,12 +33,12 @@ const main = async () => {
 
 	// *Session storage code between express app initialization and expressMiddleware function*
 	// Initialize client
-	const redisClient = createClient();
-	redisClient.connect().catch(console.error);
+	const redis = Redis.createClient();
+	redis.connect().catch(console.error);
 
 	// Initialize store
 	const redisStore = new RedisStore({
-		client: redisClient,
+		client: redis,
 		prefix: "shopcoop",
 		disableTouch: true,
 	});
@@ -62,8 +62,8 @@ const main = async () => {
 
 	const schema = await buildSchema({
 		resolvers: [HelloResolver, ListResolver, UserResolver],
+		validate: false,
 	});
-
 	const apolloServer = new ApolloServer<MyContext>({
 		schema,
 		plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -82,6 +82,7 @@ const main = async () => {
 				em: emFork,
 				req,
 				res,
+				redis
 			}),
 		})
 	);
