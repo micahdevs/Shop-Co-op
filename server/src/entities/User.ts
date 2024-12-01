@@ -20,6 +20,10 @@ export class User {
 	@Property({ type: "text", unique: true })
 	username!: string;
 
+	@Field()
+	@Property({ type: "text", unique: true })
+	email!: string;
+
 	// remove field decorator to keep hidden from graphql
 	@Property({ type: "text" })
 	password!: string;

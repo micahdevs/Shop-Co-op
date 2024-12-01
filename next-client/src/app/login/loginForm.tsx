@@ -12,9 +12,9 @@ export const LoginForm: React.FC = () => {
 
 	return (
 		<Formik
-			initialValues={{ username: "", password: "" }}
+			initialValues={{ usernameOrEmail: "", password: "" }}
 			onSubmit={async (values, { setErrors }) => {
-				const response = await login({ options: values });
+				const response = await login(values);
 				console.log(values);
 				if (response.data?.login.errors) {
 					setErrors(toErrorMap(response.data.login.errors));
@@ -27,9 +27,9 @@ export const LoginForm: React.FC = () => {
 				<Paper withBorder shadow="md" p={30} mt={30} radius="md">
 					<Form>
 						<InputField
-							name="username"
+							name="usernameOrEmail"
 							placeholder="Your Username or Email"
-							label="Username"
+							label="Username or email"
 							required
 						/>
 
