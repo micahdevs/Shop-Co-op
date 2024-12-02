@@ -16,11 +16,10 @@ import RedisStore from "connect-redis";
 import session from "express-session";
 import Redis from "ioredis";
 import { MyContext } from "./types";
-import { sendEmail } from "./utils/sendEmail";
+// import { sendEmail } from "./utils/sendEmail";
 // import { User } from "./entities/User";
 
 const main = async () => {
-	sendEmail("bob@bob.com", "hello there");
 	const orm = await MikroORM.init(mikroConfig);
 	await orm.getMigrator().up();
 	// fork the entity manager to avoid directly using global EntityManager (em) instance
