@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { FC } from "react";
+import React from "react";
 
-const ChangePasswordPage = () => {
-
+const ChangePasswordPage: React.FC = () => {
 	return (
 		<>
 			<div>

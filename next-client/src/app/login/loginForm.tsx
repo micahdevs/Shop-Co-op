@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { toErrorMap } from "../utils/toErrorMap";
 import { InputField } from "../components/InputField";
 
+
 export const LoginForm: React.FC = () => {
 	const router = useRouter();
 	const [, login] = useLoginMutation();
@@ -42,7 +43,8 @@ export const LoginForm: React.FC = () => {
 						/>
 						<Group justify="space-between" mt="lg">
 							<Checkbox label="Remember me" />
-							<Anchor component="button" size="sm">
+							{/* Anchor tag or Link here? which is better 🤔 */}
+							<Anchor href="http://localhost:3000/forgot-password" size="sm">
 								Forgot password?
 							</Anchor>
 						</Group>

@@ -2,10 +2,11 @@
 import { InputField } from "@/app/components/InputField";
 import { toErrorMap } from "@/app/utils/toErrorMap";
 import { useChangePasswordMutation } from "@/generated/graphql";
-import { Paper, Group, Checkbox, Anchor, Button } from "@mantine/core";
+import { Paper, Button, Text } from "@mantine/core";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
+import Link from "next/link";
 
 interface ChangePasswordProps {
 	params: {
@@ -50,7 +51,10 @@ const ChangePassword: FC<ChangePasswordProps> = ({ params }) => {
 								label="New Password"
 								type="password"
 							/>
-							{tokenError ? <Paper>{tokenError}</Paper> : null}
+							{tokenError ? <Text c="red">{tokenError}</Text> : null}
+							<Link href="/forgot-password">
+								Click here to get a fresh token
+							</Link>
 
 							<Button type="submit" loading={isSubmitting} fullWidth mt="xl">
 								change password
