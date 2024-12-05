@@ -1,7 +1,5 @@
 import "reflect-metadata";
-import { MikroORM } from "@mikro-orm/core";
 import { __prod__, COOKIE_NAME } from "./constants";
-import mikroConfig from "./mikro-orm.config";
 import express from "express";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
@@ -16,16 +14,18 @@ import RedisStore from "connect-redis";
 import session from "express-session";
 import Redis from "ioredis";
 import { MyContext } from "./types";
-// import { sendEmail } from "./utils/sendEmail";
-// import { User } from "./entities/User";
 
 const main = async () => {
-	const orm = await MikroORM.init(mikroConfig);
-	await orm.getMigrator().up();
-	// fork the entity manager to avoid directly using global EntityManager (em) instance
-	// additional option to use the RequestContext helper:
-	// (https://mikro-orm.io/docs/identity-map#why-is-request-context-needed)
-	const emFork = orm.em.fork();
+	//***APP DATA SOURCE NOW DEFINED IN utils/'dataSourceTypeORM.ts'***
+	// const AppDataSource = new DataSource({
+	// 	type: "postgres",
+	// 	database: "shop-co-op2",
+	// 	username: "postgres",
+	// 	password: "postgres",
+	// 	logging: true,
+	// 	synchronize: true,
+	// 	entities: [User, List],
+	// });
 
 	const app = express();
 	const httpServer = http.createServer(app);
@@ -78,10 +78,9 @@ const main = async () => {
 		express.json(),
 		expressMiddleware(apolloServer, {
 			context: async ({ req, res }): Promise<MyContext> => ({
-				em: emFork,
 				req,
 				res,
-				redis
+				redis,
 			}),
 		})
 	);

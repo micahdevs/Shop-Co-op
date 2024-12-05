@@ -1,55 +1,42 @@
-import { List } from '../entities/List';
-import { Query, Resolver, Ctx, Arg, Int, Mutation } from 'type-graphql';
-import { MyContext } from '../types';
+import { List } from "../entities/List";
+import { Query, Resolver, Arg, Mutation } from "type-graphql";
 
 @Resolver()
-export class ListResolver { 
-    @Query(() => [List])
-    lists(@Ctx() { em }: MyContext): Promise<List[]> {
-        return em.find(List, {});
-    }    
+export class ListResolver {
+	@Query(() => [List])
+	async lists(): Promise<List[]> {
+		return List.find();
+	}
 
-    @Query(() => List, { nullable: true })
-    list(
-        @Arg('id', () => Int, { nullable: true }) _id: number,
-        @Ctx() { em }: MyContext
-    ): Promise<List | null> {
-        return em.findOne(List, { _id });
-    }
+	@Query(() => List, { nullable: true })
+	list(@Arg("id") _id: number): Promise<List | null> {
+		return List.findOneBy({ _id: _id }); //findOne(id) signature dropped..use findOneBy for more type-safe querying
+	}
 
-    @Mutation(() => List)
-    async createList(
-        @Arg('title', () => String) title: string,
-        @Ctx() { em }: MyContext
-    ): Promise<List> {
-        const list = em.create(List, { title });
-        await em.persistAndFlush(list);
-        return list;
-    }
+	@Mutation(() => List)
+	async createList(@Arg("title") title: string): Promise<List> {
+		// two sql queries
+		return List.create({ title }).save();
+	}
 
-    @Mutation(() => List, { nullable: true })
-    async updateList(
-        @Arg('id') _id: number,
-        @Arg('title', () => String, { nullable: true }) title: string,
-        @Ctx() { em }: MyContext
-    ): Promise<List | null> {
-        const list = await em.findOne(List, { _id });
-        if (!list) {
-            return null;
-        }
-        if (typeof title !== 'undefined') {
-            list.title = title;
-            await em.persistAndFlush(list);
-        }
-        return list;
-    }
+	@Mutation(() => List, { nullable: true })
+	async updateList(
+		@Arg("id") _id: number,
+		@Arg("title", () => String, { nullable: true }) title: string
+	): Promise<List | null> {
+		const list = await List.findOneBy({ _id: _id });
+		if (!list) {
+			return null;
+		}
+		if (typeof title !== "undefined") {
+			await List.update({ _id }, { title });
+		}
+		return list;
+	}
 
-    @Mutation(() => Boolean)
-    async deleteList(
-        @Arg('id') _id: number,
-        @Ctx() { em }: MyContext
-    ): Promise<boolean> {
-        await em.nativeDelete(List, { _id });
-        return true;
-    }
+	@Mutation(() => Boolean)
+	async deleteList(@Arg("id") _id: number): Promise<boolean> {
+		await List.delete(_id);
+		return true;
+	}
 }
