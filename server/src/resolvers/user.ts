@@ -143,6 +143,7 @@ export class UserResolver {
 		let user;
 
 		try {
+			// User.create({}).save() MIGHT BE EQUIVALENT TO THE QUERY BUILDER CODE BELOW
 			const result = await appDataSource
 				.createQueryBuilder()
 				.insert()
@@ -154,13 +155,11 @@ export class UserResolver {
 				})
 				.returning("*")
 				.execute();
-			console.log("result: ", result);
-			user = result.raw;
+			user = result.raw[0]; // returned from SQL statement, from logged result
 		} catch (err: any) {
 			console.log("error: ", err);
 			// || err.detail.includes("already exists")) {
 			// duplicate username error
-			// POTENTIALLY NEED TO USE MIKROORM/POSTGRES EM QUERY BUILDER IF GETTING USER ERRORS/ISSUES
 			if (err.code === "23505") {
 				return {
 					errors: [

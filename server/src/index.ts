@@ -14,19 +14,10 @@ import RedisStore from "connect-redis";
 import session from "express-session";
 import Redis from "ioredis";
 import { MyContext } from "./types";
+import { appDataSource } from "./utils/dataSourceTypeORM";
 
 const main = async () => {
-	//***APP DATA SOURCE NOW DEFINED IN utils/'dataSourceTypeORM.ts'***
-	// const AppDataSource = new DataSource({
-	// 	type: "postgres",
-	// 	database: "shop-co-op2",
-	// 	username: "postgres",
-	// 	password: "postgres",
-	// 	logging: true,
-	// 	synchronize: true,
-	// 	entities: [User, List],
-	// });
-
+	appDataSource.initialize(); // consider using ".then()" to do stuff after initialization (wrapper)
 	const app = express();
 	const httpServer = http.createServer(app);
 
