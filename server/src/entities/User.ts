@@ -6,7 +6,9 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	BaseEntity,
+	OneToMany,
 } from "typeorm";
+import { List } from "./List";
 
 @ObjectType()
 @Entity()
@@ -14,14 +16,6 @@ export class User extends BaseEntity {
 	@Field()
 	@PrimaryGeneratedColumn()
 	_id!: number;
-
-	@Field(() => String) // { nullable: true } makes it optional, plus "?" at end of field name for MikroOrm...
-	@CreateDateColumn()
-	createdAt: Date;
-
-	@Field(() => String)
-	@UpdateDateColumn()
-	updatedAt: Date;
 
 	@Field()
 	@Column({ unique: true })
@@ -34,4 +28,15 @@ export class User extends BaseEntity {
 	// remove field decorator to keep hidden from graphql
 	@Column()
 	password!: string;
+
+	@OneToMany(() => List, list => list.creator)
+    lists: List[];
+
+	@Field(() => String)
+	@CreateDateColumn()
+	createdAt: Date;
+
+	@Field(() => String)
+	@UpdateDateColumn()
+	updatedAt: Date;
 }

@@ -1,5 +1,24 @@
+import { MyContext } from "src/types";
 import { List } from "../entities/List";
-import { Query, Resolver, Arg, Mutation } from "type-graphql";
+import {
+	Query,
+	Resolver,
+	Arg,
+	Mutation,
+	InputType,
+	Field,
+	Ctx,
+	UseMiddleware,
+} from "type-graphql";
+import { isAuth } from "../middleware/isAuth";
+
+@InputType()
+class ListInput {
+	@Field()
+	title: string;
+	@Field()
+	text: string;
+}
 
 @Resolver()
 export class ListResolver {
@@ -10,13 +29,19 @@ export class ListResolver {
 
 	@Query(() => List, { nullable: true })
 	list(@Arg("id") _id: number): Promise<List | null> {
-		return List.findOneBy({ _id: _id }); //findOne(id) signature dropped..use findOneBy for more type-safe querying
+		return List.findOneBy({ _id: _id });
 	}
 
 	@Mutation(() => List)
-	async createList(@Arg("title") title: string): Promise<List> {
-		// two sql queries
-		return List.create({ title }).save();
+	@UseMiddleware(isAuth)
+	async createList(
+		@Arg("input") input: ListInput,
+		@Ctx() { req }: MyContext
+	): Promise<List> {
+		return List.create({
+			...input,
+			creatorId: req.session.userId,
+		}).save();
 	}
 
 	@Mutation(() => List, { nullable: true })
