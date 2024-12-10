@@ -1,16 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useMemo } from "react";
-import {
-	UrqlProvider,
-	ssrExchange,
-	fetchExchange,
-	createClient,
-} from "@urql/next";
-import { cacheExchange, Cache, QueryInput } from "@urql/exchange-graphcache";
-import "./globals.css";
-import "@mantine/core/styles.css";
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import {
 	LoginMutation,
 	LogoutMutation,
@@ -18,7 +7,19 @@ import {
 	MeQuery,
 	RegisterMutation,
 } from "@/generated/graphql";
-import { devtoolsExchange } from "@urql/devtools";
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import "@mantine/core/styles.css";
+import { Cache, QueryInput, cacheExchange } from "@urql/exchange-graphcache";
+import {
+	UrqlProvider,
+	createClient,
+	fetchExchange,
+	mapExchange,
+	ssrExchange,
+} from "@urql/next";
+import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import "./globals.css";
 
 function betterUpdateQuery<Result, Query>(
 	cache: Cache,
@@ -34,6 +35,7 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const router = useRouter();
 	const [client, ssr] = useMemo(() => {
 		const ssr = ssrExchange({
 			isClient: typeof window !== "undefined",
@@ -41,7 +43,6 @@ export default function RootLayout({
 		const client = createClient({
 			url: "http://localhost:4000/graphql",
 			exchanges: [
-				devtoolsExchange,
 				cacheExchange({
 					updates: {
 						Mutation: {
@@ -88,6 +89,12 @@ export default function RootLayout({
 						},
 					},
 				}),
+				mapExchange({
+					onError(error) {
+						console.error(error);
+						router.replace("/login");
+					},
+				}),
 				ssr,
 				fetchExchange,
 			],
@@ -98,6 +105,7 @@ export default function RootLayout({
 		});
 
 		return [client, ssr];
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 	return (
 		<html lang="en">

@@ -4,8 +4,7 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mantine/core";
 import Link from "next/link";
-import { MeQuery, useLogoutMutation, useMeQuery } from "@/generated/graphql";
-import { GetServerSideProps } from "next";
+import { useLogoutMutation, useMeQuery } from "@/generated/graphql";
 
 interface TestNavBarRerenderProps {}
 

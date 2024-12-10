@@ -1,3 +1,4 @@
+"use client";
 import { Paper, Button } from "@mantine/core";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";

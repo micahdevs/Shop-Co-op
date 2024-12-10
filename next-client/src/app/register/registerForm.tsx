@@ -1,6 +1,8 @@
 "use client";
 import { Paper, Button } from "@mantine/core";
-import { useRegisterMutation } from "@/generated/graphql";
+// import { useRegisterMutation } from "@/generated/graphql";
+import { useMutation } from "urql";
+import { REGISTER_MUT } from "@/graphql/mutations/register";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import { toErrorMap } from "../utils/toErrorMap";
@@ -8,7 +10,7 @@ import { InputField } from "../components/InputField";
 
 export const RegisterForm: React.FC = () => {
 	const router = useRouter();
-	const [, register] = useRegisterMutation();
+	const [, register] = useMutation(REGISTER_MUT);
 
 	return (
 		<Formik

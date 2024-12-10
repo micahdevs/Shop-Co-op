@@ -1,11 +1,11 @@
 "use client";
-import React, { InputHTMLAttributes } from "react";
-import { Formik, Field, Form, FormikHelpers, useField } from "formik";
+import React from "react";
+import { Formik, Form } from "formik";
 import { InputField } from "../components/InputField";
 import { Button } from "@mantine/core";
 import { useMutation } from "urql";
 import { REGISTER_MUT } from "@/graphql/mutations/register";
-import { Mutation, UsernamePasswordInput } from "@/generated/graphql";
+import { Mutation } from "@/generated/graphql";
 import { useRouter } from "next/navigation";
 import { toErrorMap } from "../utils/toErrorMap";
 

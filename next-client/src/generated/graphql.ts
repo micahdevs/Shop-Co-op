@@ -25,9 +25,15 @@ export type FieldError = {
 export type List = {
   __typename?: 'List';
   _id: Scalars['ID']['output'];
-  createdAt?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  creatorId: Scalars['Float']['output'];
   title: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
+};
+
+export type ListInput = {
+  text: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type Mutation = {
@@ -50,7 +56,7 @@ export type MutationChangePasswordArgs = {
 
 
 export type MutationCreateListArgs = {
-  title: Scalars['String']['input'];
+  input: ListInput;
 };
 
 
@@ -90,15 +96,15 @@ export type Query = {
 
 
 export type QueryListArgs = {
-  id?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Float']['input'];
 };
 
 export type User = {
   __typename?: 'User';
   _id: Scalars['Float']['output'];
-  createdAt?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
-  updatedAt?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
 
@@ -127,6 +133,13 @@ export type ChangePasswordMutationVariables = Exact<{
 
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', _id: number, username: string } | null } };
+
+export type CreateListMutationVariables = Exact<{
+  input: ListInput;
+}>;
+
+
+export type CreateListMutation = { __typename?: 'Mutation', createList: { __typename?: 'List', _id: string, title: string, creatorId: number, createdAt: string, updatedAt: string } };
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String']['input'];
@@ -158,7 +171,7 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 export type ListsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListsQuery = { __typename?: 'Query', lists: Array<{ __typename?: 'List', title: string, _id: string, createdAt?: string | null, updatedAt?: string | null }> };
+export type ListsQuery = { __typename?: 'Query', lists: Array<{ __typename?: 'List', title: string, _id: string, createdAt: string, updatedAt: string }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -204,6 +217,21 @@ ${RegUserFragmentDoc}`;
 
 export function useChangePasswordMutation() {
   return Urql.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument);
+};
+export const CreateListDocument = `
+    mutation CreateList($input: ListInput!) {
+  createList(input: $input) {
+    _id
+    title
+    creatorId
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateListMutation() {
+  return Urql.useMutation<CreateListMutation, CreateListMutationVariables>(CreateListDocument);
 };
 export const ForgotPasswordDocument = `
     mutation ForgotPassword($email: String!) {

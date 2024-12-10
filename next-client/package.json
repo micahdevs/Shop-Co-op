@@ -8,9 +8,11 @@
 		"start": "next start",
 		"lint": "next lint",
 		"gen": "graphql-codegen --config codegen.ts",
+		"gen2": "graphql-codegen --config codegen2.ts",
 		"gen-watch": "graphql-codegen --watch"
 	},
 	"dependencies": {
+		"@graphql-typed-document-node/core": "^3.2.0",
 		"@mantine/core": "^7.13.3",
 		"@mantine/form": "^7.13.3",
 		"@mantine/hooks": "^7.13.3",
@@ -31,6 +33,7 @@
 		"@eslint/js": "^9.13.0",
 		"@graphql-codegen/cli": "5.0.3",
 		"@graphql-codegen/client-preset": "^4.5.0-alpha-20241025120637-8c227d2c67a14b063bb6a3f96d33069a98376541",
+		"@graphql-codegen/typed-document-node": "^5.0.12",
 		"@graphql-codegen/typescript-type-graphql": "^3.0.0",
 		"@graphql-codegen/typescript-urql": "^4.0.0",
 		"@parcel/watcher": "^2.4.1",

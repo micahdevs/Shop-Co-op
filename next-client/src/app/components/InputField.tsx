@@ -8,6 +8,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const InputField: React.FC<InputFieldProps> = ({
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	size: _, // remove size from being passed (incompatible)
 	...props
 }) => {
