@@ -3,7 +3,9 @@ import { gql } from "@urql/core";
 export const ME_QUERY = gql`
 	query Me {
 		me {
-			...RegUser
+			_id
+			username
+			email
 		}
 	}
 `;

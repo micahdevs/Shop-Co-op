@@ -4,10 +4,13 @@ export const CHANGE_PASSWORD = gql`
 	mutation ChangePassword($token: String!, $newPassword: String!) {
 		changePassword(token: $token, newPassword: $newPassword) {
 			errors {
-				...RegError
+				field
+				message
 			}
 			user {
-				...RegUser
+				_id
+				username
+				email
 			}
 		}
 	}

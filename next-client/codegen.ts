@@ -5,24 +5,11 @@ const config: CodegenConfig = {
 	documents: ["src/graphql/**/*.ts"],
 	ignoreNoDocuments: true, // for better experience with the watcher
 	generates: {
-		"./src/generated/graphql.ts": {
-			plugins: [
-				"typescript",
-				"typescript-operations",
-				"typescript-urql",
-			],
-			// preset: "client",
-			presetConfig: {
-				gqlTagName: "gql",
-			},
-			config: {
-				withHooks: true,
-				withComponent: false,
-				withHOC: false,
-				documentMode: "string",
-			},
+		"./src/generated/": {
+			preset: "client",
 		},
 	},
+	hooks: { afterAllFileWrite: ["prettier --write"] },
 };
 
 export default config;

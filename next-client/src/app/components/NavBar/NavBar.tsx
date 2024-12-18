@@ -11,7 +11,9 @@ import {
 } from "@tabler/icons-react";
 import classes from "./NavBar.module.css";
 import Link from "next/link";
-import { useLogoutMutation, useMeQuery } from "@/generated/graphql";
+import { LOGIN_MUT } from "@/graphql/mutations/login";
+import { ME_QUERY } from "@/graphql/queries/me";
+import { useMutation, useQuery } from "urql";
 
 interface NavBarProps {}
 
@@ -30,14 +32,15 @@ const loggedOutLinkData = [
 ];
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-	const [, logout] = useLogoutMutation();
+	const [, logout] = useMutation(LOGIN_MUT);
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
 		setIsClient(true);
 	}, []);
 
-	const [{ data, fetching }] = useMeQuery({
+	const [{ data, fetching }] = useQuery({
+		query: ME_QUERY,
 		pause: !isClient,
 	});
 
