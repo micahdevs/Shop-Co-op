@@ -30,13 +30,13 @@ export const RegisterForm: React.FC = () => {
 					<Form>
 						<InputField
 							name="username"
-							placeholder="username"
+							placeholder="Enter a username"
 							label="Username"
 						/>
-						<InputField name="email" placeholder="email" label="Email" />
+						<InputField name="email" placeholder="Your email" label="Email" />
 						<InputField
 							name="password"
-							placeholder="password"
+							placeholder="Enter a password"
 							label="Password"
 							type="password"
 						/>

@@ -1,38 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Group, Code, Paper } from "@mantine/core";
-import {
-	IconUserCircle,
-	IconSettings,
-	IconSwitchHorizontal,
-	IconLogout,
-	IconLogin2,
-	IconUserCheck,
-} from "@tabler/icons-react";
-import classes from "./NavBar.module.css";
-import Link from "next/link";
-import { LOGIN_MUT } from "@/graphql/mutations/login";
+import { LOGOUT_MUT } from "@/graphql/mutations/logout";
 import { ME_QUERY } from "@/graphql/queries/me";
+import { Code, Group, Paper } from "@mantine/core";
+import {
+	IconLogout,
+	IconNote,
+	IconSwitchHorizontal,
+	IconLogin,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
+import classes from "./NavBar.module.css";
 
 interface NavBarProps {}
 
-const loggedInLinkData = [
-	{ link: "", label: "Account", icon: IconUserCircle },
-	{ link: "", label: "Settings", icon: IconSettings },
-];
-
-const loggedOutLinkData = [
-	{ link: "http://localhost:3000/login", label: "Login", icon: IconLogin2 },
-	{
-		link: "http://localhost:3000/register",
-		label: "Register",
-		icon: IconUserCheck,
-	},
-];
-
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-	const [, logout] = useMutation(LOGIN_MUT);
+	const [, logout] = useMutation(LOGOUT_MUT);
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -43,36 +27,6 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 		query: ME_QUERY,
 		pause: !isClient,
 	});
-
-	console.log("data: ", data);
-
-	const loggedInLinks = loggedInLinkData.map((item) => (
-		<a
-			className={classes.link}
-			href={item.link}
-			key={item.label}
-			onClick={(event) => {
-				event.preventDefault();
-			}}
-		>
-			<item.icon className={classes.linkIcon} stroke={1.5} />
-			<span>{item.label}</span>
-		</a>
-	));
-
-	const loggedOutLinks = loggedOutLinkData.map((item) => (
-		<a
-			className={classes.link}
-			href={item.link}
-			key={item.label}
-			onClick={(event) => {
-				event.preventDefault();
-			}}
-		>
-			<item.icon className={classes.linkIcon} stroke={1.5} />
-			<span>{item.label}</span>
-		</a>
-	));
 
 	let body = null;
 	if (fetching) {
@@ -87,7 +41,10 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 						Shop Co-op Home
 						<Code fw={700}>v0.0.0</Code>
 					</Group>
-					{loggedOutLinks}
+					<Link href="/login" className={classes.link}>
+						<IconLogin className={classes.linkIcon} stroke={1.5} />
+						<span>Please Log In!!!</span>
+					</Link>
 				</div>
 			</nav>
 		);
@@ -101,7 +58,10 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 						<Code fw={700}>v0.0.0</Code>
 					</Group>
 					<Paper>{data.me.username}</Paper>
-					{loggedInLinks}
+					<Link href="/create-list" className={classes.link}>
+						<IconNote className={classes.linkIcon} stroke={1.5} />
+						<span>Create List</span>
+					</Link>
 				</div>
 
 				<div className={classes.footer}>
@@ -112,7 +72,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
 
 					<Link
 						onClick={() => {
-							logout({}); // empty object passed as logout mutation doesn't take any variables
+							logout({});
 						}}
 						href="/login"
 						className={classes.link}
