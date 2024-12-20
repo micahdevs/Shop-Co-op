@@ -1,18 +1,19 @@
 "use client";
-import { useCreateListMutation } from "@/generated/graphql";
+import { CREATE_LIST } from "@/graphql/mutations/createList";
 import { Button, Paper } from "@mantine/core";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { InputField } from "../components/InputField";
 import { useIsAuth } from "../utils/useIsAuth";
+import { useMutation } from "urql";
 
 // SHOULD ADD SOME FORM VALIDATION
 
 const CreateList: React.FC = ({}) => {
 	const router = useRouter();
 	useIsAuth();
-	const [, createList] = useCreateListMutation();
+	const [, createList] = useMutation(CREATE_LIST);
 	return (
 		<Formik
 			initialValues={{ title: "", text: "" }}

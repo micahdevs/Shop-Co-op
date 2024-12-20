@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { LogoutMutation, MeDocument, MeQuery } from "@/generated/graphql";
+import {
+	LoginMutation,
+	LogoutMutation,
+	MeDocument,
+	MeQuery,
+	RegisterMutation,
+} from "@/generated/graphql";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache";
@@ -48,38 +54,38 @@ export default function RootLayout({
 									() => ({ me: null })
 								);
 							},
-							// login: (_result, args, cache) => {
-							// 	// betterUpdateQuery<LoginMutation, MeQuery>(
-							// 	// 	cache,
-							// 	// 	{ query: MeDocument },
-							// 	// 	_result,
-							// 	// 	(result, query) => {
-							// 	// 		if (result.login.errors) {
-							// 	// 			return query;
-							// 	// 		} else {
-							// 	// 			return {
-							// 	// 				me: result.login.user,
-							// 	// 			};
-							// 	// 		}
-							// 	// 	}
-							// 	// );
-							// },
-							// register: (_result, args, cache) => {
-							// 	// betterUpdateQuery<RegisterMutation, MeQuery>(
-							// 	// 	cache,
-							// 	// 	{ query: MeDocument },
-							// 	// 	_result,
-							// 	// 	(result, query) => {
-							// 	// 		if (result.register.errors) {
-							// 	// 			return query;
-							// 	// 		} else {
-							// 	// 			return {
-							// 	// 				me: result.register.user,
-							// 	// 			};
-							// 	// 		}
-							// 	// 	}
-							// 	// );
-							// },
+							login: (_result, args, cache) => {
+								betterUpdateQuery<LoginMutation, MeQuery>(
+									cache,
+									{ query: MeDocument },
+									_result,
+									(result, query) => {
+										if (result.login.errors) {
+											return query;
+										} else {
+											return {
+												me: result.login.user,
+											};
+										}
+									}
+								);
+							},
+							register: (_result, args, cache) => {
+								betterUpdateQuery<RegisterMutation, MeQuery>(
+									cache,
+									{ query: MeDocument },
+									_result,
+									(result, query) => {
+										if (result.register.errors) {
+											return query;
+										} else {
+											return {
+												me: result.register.user,
+											};
+										}
+									}
+								);
+							},
 						},
 					},
 				}),

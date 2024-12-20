@@ -1,12 +1,13 @@
 "use client";
 import { InputField } from "@/app/components/InputField";
 import { toErrorMap } from "@/app/utils/toErrorMap";
-import { useChangePasswordMutation } from "@/generated/graphql";
+import { CHANGE_PASSWORD } from "@/graphql/mutations/changePassword";
 import { Paper, Button, Text } from "@mantine/core";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { FC, useState } from "react";
 import Link from "next/link";
+import { useMutation } from "urql";
 
 interface ChangePasswordProps {
 	params: {
@@ -19,7 +20,7 @@ const ChangePassword: FC<ChangePasswordProps> = ({ params }) => {
 	const router = useRouter();
 	const [tokenError, setTokenError] = useState("");
 	const { token } = params;
-	const [, changePassword] = useChangePasswordMutation();
+	const [, changePassword] = useMutation(CHANGE_PASSWORD);
 	return (
 		<>
 			<Formik
