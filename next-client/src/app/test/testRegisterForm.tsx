@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Formik, Form } from "formik";
-import { InputField } from "../components/InputField";
+import { InputField } from "../components/InputFields/InputField";
 import { Button } from "@mantine/core";
 import { useMutation } from "urql";
 import { REGISTER_MUT } from "@/graphql/mutations/register";

@@ -1,5 +1,5 @@
 "use client";
-import { InputField } from "@/app/components/InputField";
+import { InputField } from "@/app/components/InputFields/InputField";
 import { toErrorMap } from "@/app/utils/toErrorMap";
 import { CHANGE_PASSWORD } from "@/graphql/mutations/changePassword";
 import { Paper, Button, Text } from "@mantine/core";

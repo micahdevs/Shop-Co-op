@@ -6,7 +6,7 @@ import { REGISTER_MUT } from "@/graphql/mutations/register";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import { toErrorMap } from "../utils/toErrorMap";
-import { InputField } from "../components/InputField";
+import { InputField } from "../components/InputFields/InputField";
 
 export const RegisterForm: React.FC = () => {
 	const router = useRouter();

@@ -3,7 +3,7 @@ import { Checkbox, Anchor, Paper, Group, Button } from "@mantine/core";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { toErrorMap } from "../utils/toErrorMap";
-import { InputField } from "../components/InputField";
+import { InputField } from "../components/InputFields/InputField";
 import { useMutation } from "urql";
 import { LOGIN_MUT } from "@/graphql/mutations/login";
 

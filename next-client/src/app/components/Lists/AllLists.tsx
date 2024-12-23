@@ -7,7 +7,7 @@ import { useQuery } from "urql";
 
 interface ListsProps {}
 
-export const Lists: React.FC<ListProps> = ({}) => {
+export const AllLists: React.FC<ListProps> = ({}) => {
 	const [{ data }] = useQuery<ListsQuery>({ query: LISTS_QUERY });
 	return (
 		<>

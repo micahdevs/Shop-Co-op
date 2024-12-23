@@ -2,7 +2,7 @@
 import { Paper, Button } from "@mantine/core";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
-import { InputField } from "../components/InputField";
+import { InputField } from "../components/InputFields/InputField";
 import { FORGOT_PASSWORD } from "@/graphql/mutations/forgotPassword";
 import { useMutation } from "urql";
 
